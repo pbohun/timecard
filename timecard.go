@@ -10,11 +10,37 @@ import (
 )
 
 func main() {
-	createProject("hello")
-	checkIn("hello")
-	time.Sleep(1000 * time.Millisecond)
-	checkOut("hello")
-	listTime("hello")
+	args := os.Args
+	if len(args) < 2 || len(args) > 3 {
+		usage(args)
+		return
+	}
+	if len(args) == 2 {
+		if args[1] == "help" {
+			fmt.Println("show help")
+		} else {
+			usage(args)
+		}
+	} else {
+		projectName := args[1]
+		command := args[2]
+		switch command {
+		case "in":
+			checkIn(projectName)
+		case "out":
+			checkOut(projectName)
+		case "hours":
+			listTime(projectName)
+		default:
+			fmt.Printf("Error: invalid command [%s]\n", command)
+			usage(args)
+		}
+	}
+}
+
+func usage(args []string) {
+	fmt.Printf("Usage: %s <project_name> <command>\n", args[0])
+	fmt.Printf("For help type: %s help\n", args[0])
 }
 
 func createProject(projectName string) {
